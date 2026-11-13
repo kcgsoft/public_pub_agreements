@@ -5,50 +5,103 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>중랑동행버스 설치</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=IBM+Plex+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --ink: #143024;
+      --green: #1C7C38;
+      --sun: #F28D00;
+      --paper: #F6F1E6;
+      --card: #FFFDF8;
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
-      color: #111;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "IBM Plex Sans KR", sans-serif;
+      background:
+        radial-gradient(circle at 88% 8%, #FFD9A0 0 92px, transparent 93px),
+        radial-gradient(circle at 88% 8%, rgba(242, 141, 0, 0.35) 0 140px, transparent 141px),
+        linear-gradient(#F6F1E6, #F6F1E6);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 84px;
+      background:
+        radial-gradient(80px 40px at 12% 100%, #1C7C38 98%, transparent 100%),
+        radial-gradient(120px 48px at 38% 110%, #176832 98%, transparent 100%),
+        radial-gradient(160px 56px at 72% 115%, #1C7C38 98%, transparent 100%);
+      pointer-events: none;
     }
 
     main {
+      position: relative;
       max-width: 420px;
-      padding: 28px 20px;
-    }
-
-    img {
-      display: block;
-      width: 72px;
-      height: auto;
-      margin: 0 0 16px;
-    }
-
-    h1 {
-      font-size: 22px;
-      margin: 0 0 8px;
+      margin: 0 auto;
+      padding: 28px 22px 120px;
     }
 
     .notice {
-      margin: 0 0 20px;
-      padding: 12px 14px;
-      background: #FFF6EA;
-      color: #A85A00;
-      font-size: 15px;
-      line-height: 1.5;
+      margin: 0 0 28px;
+      padding: 14px 16px;
+      background: var(--ink);
+      color: #F6F1E6;
+      font-size: 16px;
+      letter-spacing: -0.02em;
     }
 
-    p {
-      margin: 0 0 12px;
-      line-height: 1.5;
-      font-size: 15px;
+    .mark {
+      display: block;
+      width: 84px;
+      height: auto;
+      margin: 0 0 18px;
+      filter: drop-shadow(0 10px 16px rgba(20, 48, 36, 0.12));
     }
 
-    ul {
-      margin: 0 0 24px;
-      padding-left: 18px;
+    h1 {
+      margin: 0 0 10px;
+      font-family: "Gowun Batang", serif;
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+    }
+
+    .lead {
+      margin: 0 0 22px;
+      font-size: 16px;
       line-height: 1.6;
+    }
+
+    .facts {
+      margin: 0 0 28px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .facts li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 10px;
       font-size: 15px;
+    }
+
+    .facts li::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sun);
+      flex: none;
     }
 
     .stores {
@@ -65,12 +118,27 @@
       gap: 10px;
       width: 100%;
       box-sizing: border-box;
-      padding: 14px 16px;
-      border: 1px solid #1C7C38;
-      color: #1C7C38;
+      padding: 16px 16px;
+      border: 0;
+      border-radius: 14px;
       text-decoration: none;
-      font: 16px -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
-      background: #fff;
+      font: 500 16px "IBM Plex Sans KR", sans-serif;
+    }
+
+    #ios {
+      background: var(--ink);
+      color: #F6F1E6;
+    }
+
+    #ios svg path {
+      fill: #F6F1E6;
+    }
+
+    #android,
+    #outside {
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1.5px var(--green);
     }
 
     a svg {
@@ -82,16 +150,40 @@
     button[hidden] {
       display: none;
     }
+
+    .notice,
+    .mark,
+    h1,
+    .lead,
+    .facts,
+    .stores {
+      animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .mark { animation-delay: 0.05s; }
+    h1 { animation-delay: 0.1s; }
+    .lead { animation-delay: 0.16s; }
+    .facts { animation-delay: 0.22s; }
+    .stores { animation-delay: 0.28s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .notice, .mark, h1, .lead, .facts, .stores { animation: none; }
+    }
   </style>
 </head>
 
 <body>
   <main>
     <p class="notice">곧 출시 예정입니다.</p>
-    <img src="logo.png" alt="중랑동행버스">
+    <img class="mark" src="logo.png" alt="중랑동행버스">
     <h1>중랑동행버스</h1>
-    <p>중랑구청이 운영하는 순환 셔틀버스입니다.</p>
-    <ul>
+    <p class="lead">중랑구청이 운영하는 순환 셔틀버스입니다.</p>
+    <ul class="facts">
       <li>실시간 차량 위치</li>
       <li>정류장과 노선 안내</li>
       <li>운행 시간표</li>
