@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>중랑동행버스 설치</title>
   <link href="https://cdn.jsdelivr.net/npm/@sun-typeface/suit@2.0.5/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
   <style>
     :root {
       --black: #000000;
@@ -106,6 +107,69 @@
       display: none;
     }
 
+    .stops {
+      margin-top: 48px;
+    }
+
+    .stops h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    #map {
+      height: 320px;
+      margin: 0 0 8px;
+      border: 1px solid #000;
+    }
+
+    .stops p {
+      margin: 0 0 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    #stop-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    #stop-list button {
+      display: block;
+      width: 100%;
+      margin: 0 0 8px;
+      padding: 12px 0;
+      border: 0;
+      border-bottom: 1px solid #000;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      color: #000;
+      text-align: left;
+      font: 500 15px "SUIT Variable", sans-serif;
+    }
+
+    #stop-list .where {
+      display: block;
+      margin-top: 4px;
+      font-weight: 400;
+      font-size: 13px;
+    }
+
+    .pin span {
+      display: flex;
+      width: 22px;
+      height: 22px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
     .notice,
     .mark,
     h1,
@@ -152,7 +216,14 @@
         </svg>Play Store로 이동</a>
       <button id="outside" hidden type="button">브라우저에서 열기</button>
     </div>
+    <section class="stops" aria-labelledby="stops-title">
+      <h2 id="stops-title">정류장</h2>
+      <div id="map"></div>
+      <p>번호가 있는 점만 지도에 있습니다. 붙임 자료만 있는 정류장은 목록에 있습니다.</p>
+      <ol id="stop-list"></ol>
+    </section>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const OPEN_STORE = false;
     const IOS_APP_ID = "0000000000";
@@ -206,6 +277,60 @@
         location.href = "intent" + "://" + rest + "#Intent;scheme=https;action=android.intent.action.VIEW;S.browser_fallback_url=" + encodeURIComponent(page) + ";end";
       });
     }
+
+    const STOPS = [
+      { n: 1, name: "중랑구청", where: "기점, 종점", lat: 37.60661, lng: 127.09423 },
+      { n: 2, name: "대한노인회중랑구지회", where: "쌍용아파트.신내테크노타운앞" },
+      { n: 3, name: "중화1동주민센터", where: "중화역2번출구.중화1동주민센터", lat: 37.6016358, lng: 127.0807314 },
+      { n: 4, name: "중화2동주민센터", where: "중화역입구", lat: 37.6018053, lng: 127.0777831 },
+      { n: 5, name: "묵2동주민센터", where: "금보당금은방", lat: 37.6079004, lng: 127.0766217 },
+      { n: 6, name: "중랑구실내놀이터(묵동장미마을점)", where: "붙임파일 참고" },
+      { n: 7, name: "중화2동체육공원", where: "중화2동체육공원", lat: 37.6003145, lng: 127.0738453 },
+      { n: 8, name: "중화어린이도서관", where: "중랑세무서", lat: 37.593835, lng: 127.0724871 },
+      { n: 9, name: "중랑세무서", where: "서울우유앞", lat: 37.5917572, lng: 127.0729237 },
+      { n: 10, name: "딩가동4번지", where: "동부시장남문입구", lat: 37.5904165, lng: 127.0774563 },
+      { n: 11, name: "상봉2동주민센터", where: "88병원", lat: 37.5913813, lng: 127.0807262 },
+      { n: 12, name: "중랑문화원", where: "중랑구시설관리공단" },
+      { n: 13, name: "딩가동2번지", where: "면목마젤란아파트" },
+      { n: 14, name: "중랑구보훈회관", where: "면목두산1차.사가정아이파크", lat: 37.5817989, lng: 127.0835911 },
+      { n: 15, name: "제2방정환교육지원센터", where: "사가정역3번출구", lat: 37.5806789, lng: 127.0872965 },
+      { n: 16, name: "중랑구가족센터", where: "중화중학교.면목고등학교", lat: 37.58398, lng: 127.094 },
+      { n: 17, name: "망우3동주민센터", where: "망우3동주민센터.혜원여중고후문", lat: 37.592151, lng: 127.0933107 },
+      { n: 18, name: "중랑실내놀이터(망우역점)", where: "상봉터미널", lat: 37.5962146, lng: 127.0928693 },
+      { n: 19, name: "방정환교육지원센터", where: "중랑구방정환교육지원센터", lat: 37.5974176, lng: 127.0887727 },
+      { n: 20, name: "유린원광장애인복지관", where: "성원아파트.경남아너스빌앞", lat: 37.6034629, lng: 127.0958366 }
+    ];
+
+    const map = L.map("map", { scrollWheelZoom: false });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+    const list = document.getElementById("stop-list");
+    const bounds = [];
+    STOPS.forEach(function (stop) {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.innerHTML = stop.n + ". " + stop.name + "<span class=\"where\">" + stop.where + "</span>";
+      item.appendChild(button);
+      list.appendChild(item);
+      if (stop.lat == null) return;
+      const marker = L.marker([stop.lat, stop.lng], {
+        icon: L.divIcon({
+          className: "pin",
+          html: "<span>" + stop.n + "</span>",
+          iconSize: [22, 22],
+          iconAnchor: [11, 11]
+        })
+      }).addTo(map);
+      marker.bindPopup(stop.n + ". " + stop.name);
+      bounds.push([stop.lat, stop.lng]);
+      button.addEventListener("click", function () {
+        map.flyTo([stop.lat, stop.lng], 16);
+        marker.openPopup();
+      });
+    });
+    if (bounds.length) map.fitBounds(bounds, { padding: [24, 24] });
   </script>
 </body>
 
