@@ -6,17 +6,25 @@
 <title>중랑동행버스 설치</title>
 <style>
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; color: #111; }
-  main { padding: 24px 20px; }
+  main { max-width: 420px; padding: 28px 20px; }
+  img { display: block; width: 72px; height: auto; margin: 0 0 16px; }
   h1 { font-size: 22px; margin: 0 0 8px; }
-  p { margin: 0 0 20px; line-height: 1.5; font-size: 15px; }
+  p { margin: 0 0 12px; line-height: 1.5; font-size: 15px; }
+  ul { margin: 0 0 24px; padding-left: 18px; line-height: 1.6; font-size: 15px; }
   .stores { display: flex; flex-direction: column; gap: 10px; }
-  a { display: block; padding: 14px 16px; border: 1px solid #111; text-align: center; color: #111; text-decoration: none; font-size: 16px; }
+  a { display: block; padding: 14px 16px; border: 1px solid #1C7C38; text-align: center; color: #1C7C38; text-decoration: none; font-size: 16px; }
 </style>
 </head>
 <body>
 <main>
+<img src="logo.png" alt="중랑동행버스">
 <h1>중랑동행버스</h1>
-<p id="desktop">휴대폰 카메라로 QR 코드를 찍어 설치해 주세요.</p>
+<p>중랑구청이 운영하는 순환 셔틀버스입니다.</p>
+<ul>
+  <li>실시간 차량 위치</li>
+  <li>정류장과 노선 안내</li>
+  <li>운행 시간표</li>
+</ul>
 <div class="stores">
   <a id="ios">App Store로 이동</a>
   <a id="android">Play Store로 이동</a>
@@ -28,21 +36,8 @@ const STORE_URL = {
   android: "market://details?id=com.spacosa.android.catchloc.jungnang",
 };
 
-function storeUrlFor(userAgent, maxTouchPoints) {
-  if (/Android/i.test(userAgent)) return STORE_URL.android;
-  if (/iPhone|iPad|iPod/.test(userAgent)) return STORE_URL.ios;
-  // Macintosh, not Mac, because an iPhone user-agent contains "Mac OS X".
-  if (/Macintosh/.test(userAgent) && maxTouchPoints > 0) return STORE_URL.ios;
-  return null;
-}
-
 document.getElementById("ios").href = STORE_URL.ios;
 document.getElementById("android").href = STORE_URL.android;
-const url = storeUrlFor(navigator.userAgent, navigator.maxTouchPoints || 0);
-if (url) {
-  document.getElementById("desktop").hidden = true;
-  location.replace(url);
-}
 </script>
 </body>
 </html>
