@@ -12,7 +12,9 @@
   p { margin: 0 0 12px; line-height: 1.5; font-size: 15px; }
   ul { margin: 0 0 24px; padding-left: 18px; line-height: 1.6; font-size: 15px; }
   .stores { display: flex; flex-direction: column; gap: 10px; }
-  a { display: block; padding: 14px 16px; border: 1px solid #1C7C38; text-align: center; color: #1C7C38; text-decoration: none; font-size: 16px; }
+  a, button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; box-sizing: border-box; padding: 14px 16px; border: 1px solid #1C7C38; color: #1C7C38; text-decoration: none; font: 16px -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; background: #fff; }
+  a svg { width: 22px; height: 22px; flex: none; }
+  button[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -26,18 +28,49 @@
   <li>운행 시간표</li>
 </ul>
 <div class="stores">
-  <a id="ios">App Store로 이동</a>
-  <a id="android">Play Store로 이동</a>
+  <a id="ios"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M16.4 1.4c0 1.1-.5 2.3-1.2 3.1-.7.9-2 1.6-3 1.6-.1 0-.2 0-.3 0 0-.1 0-.2 0-.4 0-1.1.6-2.3 1.2-3 .8-.9 2.1-1.6 3.2-1.7.1.1.1.3.1.4zm4.6 15.7c0 .1-.5 1.6-1.5 3.1-1 1.3-1.9 2.7-3.4 2.7-1.5 0-1.9-.9-3.6-.9-1.7 0-2.3.9-3.7.9-1.4 0-2.3-1.3-3.4-2.8-1.3-1.8-2.3-4.6-2.3-7.3 0-4.3 2.8-6.5 5.6-6.5 1.4 0 2.7 1 3.6 1 .9 0 2.2-1 3.9-1 .6 0 2.9.1 4.4 2.2-.1.1-2.5 1.5-2.5 4.4 0 3.5 3.1 4.7 3.1 4.7-.1.1-.4 1.4-1.2 2.5z"/></svg>App Store로 이동</a>
+  <a id="android"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#34A853" d="M3.6 20.4 13.1 12 3.6 3.6c-.4.4-.6.9-.6 1.6v13.6c0 .7.2 1.2.6 1.6z"/><path fill="#FBBC04" d="M16.4 15.2 13.1 12 3.6 20.4c.5.5 1.2.6 2 .1l10.8-5.3z"/><path fill="#4285F4" d="M20.5 10.8 16.4 8.5 13.1 12l3.3 3.2 4.1-2.4c.9-.5.9-1.5 0-2z"/><path fill="#EA4335" d="M3.6 3.6 13.1 12l3.3-3.5L5.6 2.5c-.8-.5-1.5-.4-2 .1 0 .3 0 .7 0 1z"/></svg>Play Store로 이동</a>
+  <button id="outside" hidden type="button">브라우저에서 열기</button>
 </div>
 </main>
 <script>
-const STORE_URL = {
-  ios: "itms-apps://apps.apple.com/app/id0000000000",
-  android: "market://details?id=com.spacosa.android.catchloc.jungnang",
-};
+const IOS_APP_ID = "0000000000";
+const ANDROID_ID = "com.spacosa.android.catchloc.jungnang";
+const ua = navigator.userAgent;
+const kakao = /KAKAOTALK/i.test(ua);
 
-document.getElementById("ios").href = STORE_URL.ios;
-document.getElementById("android").href = STORE_URL.android;
+function storeHref() {
+  return {
+    ios: "itms-" + "apps://apps.apple.com/app/id" + IOS_APP_ID,
+    android: "mar" + "ket://details?id=" + ANDROID_ID,
+  };
+}
+
+function webHref() {
+  return {
+    ios: "https://apps.apple.com/kr/app/id" + IOS_APP_ID,
+    android: "https://play.google.com/store/apps/details?id=" + ANDROID_ID,
+  };
+}
+
+// Kakao's in-app webview hangs if this page points at a store scheme on load.
+const links = kakao ? webHref() : storeHref();
+document.getElementById("ios").href = links.ios;
+document.getElementById("android").href = links.android;
+
+if (kakao) {
+  const outside = document.getElementById("outside");
+  outside.hidden = false;
+  outside.addEventListener("click", function () {
+    const page = location.href;
+    if (/iPhone|iPad|iPod/.test(ua)) {
+      location.href = "kakao" + "talk://web/openExternal?url=" + encodeURIComponent(page);
+      return;
+    }
+    const rest = page.replace(/^https?:\/\//i, "");
+    location.href = "intent" + "://" + rest + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent(page) + ";end";
+  });
+}
 </script>
 </body>
 </html>
