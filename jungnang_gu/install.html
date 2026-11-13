@@ -29,6 +29,15 @@
       margin: 0 0 8px;
     }
 
+    .notice {
+      margin: 0 0 20px;
+      padding: 12px 14px;
+      background: #FFF6EA;
+      color: #A85A00;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
     p {
       margin: 0 0 12px;
       line-height: 1.5;
@@ -78,6 +87,7 @@
 
 <body>
   <main>
+    <p class="notice">곧 출시 예정입니다.</p>
     <img src="logo.png" alt="중랑동행버스">
     <h1>중랑동행버스</h1>
     <p>중랑구청이 운영하는 순환 셔틀버스입니다.</p>
@@ -101,6 +111,7 @@
     </div>
   </main>
   <script>
+    const OPEN_STORE = false;
     const IOS_APP_ID = "0000000000";
     const ANDROID_ID = "com.spacosa.android.catchloc.jungnang";
     const ua = navigator.userAgent;
@@ -134,7 +145,7 @@
       return null;
     }
 
-    if (!kakao) {
+    if (OPEN_STORE && !kakao) {
       const url = storeUrlFor(ua, navigator.maxTouchPoints || 0);
       if (url) setTimeout(function () { location.replace(url); }, 500);
     }
