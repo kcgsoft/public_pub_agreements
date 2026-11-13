@@ -4,11 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>중랑동행버스 설치</title>
+<style>
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; color: #111; }
+  main { padding: 24px 20px; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  p { margin: 0 0 20px; line-height: 1.5; font-size: 15px; }
+  .stores { display: flex; flex-direction: column; gap: 10px; }
+  a { display: block; padding: 14px 16px; border: 1px solid #111; text-align: center; color: #111; text-decoration: none; font-size: 16px; }
+</style>
 </head>
 <body>
+<main>
 <h1>중랑동행버스</h1>
 <p id="desktop">휴대폰 카메라로 QR 코드를 찍어 설치해 주세요.</p>
-<a id="store" hidden>설치하기</a>
+<div class="stores">
+  <a id="ios">App Store로 이동</a>
+  <a id="android">Play Store로 이동</a>
+</div>
+</main>
 <script>
 const STORE_URL = {
   ios: "itms-apps://apps.apple.com/app/id0000000000",
@@ -23,13 +36,11 @@ function storeUrlFor(userAgent, maxTouchPoints) {
   return null;
 }
 
-const store = document.getElementById("store");
-const desktop = document.getElementById("desktop");
+document.getElementById("ios").href = STORE_URL.ios;
+document.getElementById("android").href = STORE_URL.android;
 const url = storeUrlFor(navigator.userAgent, navigator.maxTouchPoints || 0);
 if (url) {
-  store.href = url;
-  store.hidden = false;
-  desktop.hidden = true;
+  document.getElementById("desktop").hidden = true;
   location.replace(url);
 }
 </script>
