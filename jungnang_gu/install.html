@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>중랑동행버스 설치</title>
+</head>
+<body>
+<h1>중랑동행버스</h1>
+<p id="desktop">휴대폰 카메라로 QR 코드를 찍어 설치해 주세요.</p>
+<a id="store" hidden>설치하기</a>
+<script>
+const STORE_URL = {
+  ios: "itms-apps://apps.apple.com/app/id0000000000",
+  android: "market://details?id=com.spacosa.android.catchloc.jungnang",
+};
+
+function storeUrlFor(userAgent, maxTouchPoints) {
+  if (/Android/i.test(userAgent)) return STORE_URL.android;
+  if (/iPhone|iPad|iPod/.test(userAgent)) return STORE_URL.ios;
+  // Macintosh, not Mac, because an iPhone user-agent contains "Mac OS X".
+  if (/Macintosh/.test(userAgent) && maxTouchPoints > 0) return STORE_URL.ios;
+  return null;
+}
+
+const store = document.getElementById("store");
+const desktop = document.getElementById("desktop");
+const url = storeUrlFor(navigator.userAgent, navigator.maxTouchPoints || 0);
+if (url) {
+  store.href = url;
+  store.hidden = false;
+  desktop.hidden = true;
+  location.replace(url);
+}
+</script>
+</body>
+</html>
