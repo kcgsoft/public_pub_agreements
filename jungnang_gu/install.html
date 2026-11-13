@@ -68,7 +68,7 @@ if (kakao) {
       return;
     }
     const rest = page.replace(/^https?:\/\//i, "");
-    location.href = "intent" + "://" + rest + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent(page) + ";end";
+    location.href = "intent" + "://" + rest + "#Intent;scheme=https;action=android.intent.action.VIEW;S.browser_fallback_url=" + encodeURIComponent(page) + ";end";
   });
 }
 </script>
